@@ -6,6 +6,7 @@ import cors from 'cors';
 
 import userRoutes from './routes/userRoutes';
 import tokenRoutes from './routes/tokenRoutes';
+import spendingRoutes from './routes/spendingRoutes';
 
 const app = express();
 mongoose
@@ -25,5 +26,6 @@ app.use(express.json());
 
 app.use('/users/', userRoutes);
 app.use('/tokens/', tokenRoutes);
+app.use('/spendings/', spendingRoutes);
 
 export default app;

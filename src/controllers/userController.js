@@ -1,12 +1,15 @@
-import User from '../models/UserModel';
+import User from '../models/User';
 
 class UserController {
   async store(req, res) {
     try {
-      const newUser = new User(req.body);
-      await newUser.register();
+      const sentUser = new User(req.body);
+      await sentUser.register();
 
-      return res.json(newUser);
+      const { user } = sentUser;
+      const { id, username, email } = user;
+
+      return res.json({ id, username, email });
     } catch (e) {
       return res.status(400).json({
         errors: [e.message],
