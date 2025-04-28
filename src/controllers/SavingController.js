@@ -1,4 +1,4 @@
-import { SavingModel } from '../models/Saving';
+import { SavingModel } from '../models/Saving.js';
 
 class SavingController {
   async store(req, res) {

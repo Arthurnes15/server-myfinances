@@ -4,10 +4,10 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 
-import userRoutes from './routes/userRoutes';
-import tokenRoutes from './routes/tokenRoutes';
-import spendingRoutes from './routes/spendingRoutes';
-import savingsRoutes from './routes/savingRoutes';
+import userRoutes from './routes/userRoutes.js';
+import tokenRoutes from './routes/tokenRoutes.js';
+import spendingRoutes from './routes/spendingRoutes.js';
+import savingsRoutes from './routes/savingRoutes.js';
 
 const app = express();
 mongoose
