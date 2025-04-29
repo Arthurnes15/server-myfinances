@@ -3,11 +3,13 @@ dotenv.config();
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import { resolve } from 'path';
 
 import userRoutes from './routes/userRoutes.js';
 import tokenRoutes from './routes/tokenRoutes.js';
 import spendingRoutes from './routes/spendingRoutes.js';
 import savingsRoutes from './routes/savingRoutes.js';
+import photoRoutes from './routes/photoRoutes.js';
 
 const app = express();
 mongoose
@@ -24,10 +26,12 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.static(resolve(__dirname, 'uploads')));
 
 app.use('/users/', userRoutes);
 app.use('/tokens/', tokenRoutes);
 app.use('/spendings/', spendingRoutes);
 app.use('/savings/', savingsRoutes);
+app.use('/photos', photoRoutes);
 
 export default app;
