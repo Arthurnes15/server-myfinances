@@ -1,4 +1,4 @@
-import SpendingModel from '../models/spending.js';
+import SpendingModel from '../models/Spending.js';
 
 class SpendingController {
   async store(req, res) {

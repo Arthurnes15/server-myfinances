@@ -35,6 +35,6 @@ app.use('/users/', userRoutes);
 app.use('/tokens/', tokenRoutes);
 app.use('/spendings/', spendingRoutes);
 app.use('/savings/', savingsRoutes);
-app.use('/photos', photoRoutes);
+app.use('/photos/', photoRoutes);
 
 export default app;
