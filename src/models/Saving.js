@@ -10,4 +10,4 @@ const SavingSchema = new mongoose.Schema({
   createdOn: { type: Date, default: Date.now() },
 });
 
-export const SavingModel = mongoose.model('Saving', SavingSchema);
+export default mongoose.model('Saving', SavingSchema);

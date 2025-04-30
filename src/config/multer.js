@@ -1,6 +1,8 @@
 import multer, { MulterError } from 'multer';
 import { extname, resolve } from 'path';
 
+const PROJECT_ROOT_DIR = process.cwd();
+const IMAGES_PATH = resolve(PROJECT_ROOT_DIR, 'uploads', 'images');
 const randomNumber = () => Math.floor(Math.random() * 10000 + 10000);
 
 export default {
@@ -17,7 +19,7 @@ export default {
   },
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, resolve(__dirname, '..', '..', 'uploads', 'images'));
+      cb(null, IMAGES_PATH);
     },
     filename: (req, file, cb) => {
       cb(null, `${Date.now()}_${randomNumber()}${extname(file.originalname)}`);

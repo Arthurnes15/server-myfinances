@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 export default {
-  url: 'http://localhost:3001',
+  url: process.env.PHOTO_URL,
 };

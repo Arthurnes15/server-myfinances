@@ -12,4 +12,4 @@ const SpendingSchema = new mongoose.Schema({
   user: { type: String, required: [true, 'Campo obrigatório'] },
 });
 
-export const SpendingModel = mongoose.model('Spending', SpendingSchema);
+export default mongoose.model('Spending', SpendingSchema);

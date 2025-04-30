@@ -23,10 +23,13 @@ const corsOptions = {
   origin: process.env.CORS_URL,
 };
 
+const PROJECT_ROOT_DIR = process.cwd();
+const UPLOADS_PATH = resolve(PROJECT_ROOT_DIR, 'uploads');
+
 app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static(resolve(__dirname, 'uploads')));
+app.use(express.static(UPLOADS_PATH));
 
 app.use('/users/', userRoutes);
 app.use('/tokens/', tokenRoutes);

@@ -1,5 +1,4 @@
-import url from '../config/urlPhoto.js';
-import { SavingModel } from '../models/saving.js';
+import SavingModel from '../models/saving.js';
 
 class SavingController {
   async store(req, res) {
@@ -8,7 +7,6 @@ class SavingController {
     const { id, name, price, investment, user } = sentSaving;
 
     sentSaving.percentage = ((investment * 100) / price).toFixed(2);
-    sentSaving.image = `${url}/images/${req.body.image}`;
 
     const err = sentSaving.validateSync();
 
