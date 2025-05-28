@@ -9,7 +9,6 @@ import userRoutes from './routes/userRoutes.js';
 import tokenRoutes from './routes/tokenRoutes.js';
 import spendingRoutes from './routes/spendingRoutes.js';
 import savingsRoutes from './routes/savingRoutes.js';
-import photoRoutes from './routes/photoRoutes.js';
 
 const app = express();
 mongoose
@@ -35,6 +34,5 @@ app.use('/users/', userRoutes);
 app.use('/tokens/', tokenRoutes);
 app.use('/spendings/', spendingRoutes);
 app.use('/savings/', savingsRoutes);
-app.use('/photos/', photoRoutes);
 
 export default app;
