@@ -30,6 +30,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(UPLOADS_PATH));
 
+app.get('/', (req, res) => {
+  res.json('An API built in express about finances');
+});
+
 app.use('/users/', userRoutes);
 app.use('/tokens/', tokenRoutes);
 app.use('/spendings/', spendingRoutes);
