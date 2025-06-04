@@ -8,6 +8,7 @@ import { resolve } from 'path';
 import userRoutes from './routes/userRoutes.js';
 import tokenRoutes from './routes/tokenRoutes.js';
 import spendingRoutes from './routes/spendingRoutes.js';
+import invoicesRoutes from './routes/invoicesRoutes.js';
 import savingsRoutes from './routes/savingRoutes.js';
 
 const app = express();
@@ -22,13 +23,9 @@ const corsOptions = {
   origin: process.env.CORS_URL,
 };
 
-const PROJECT_ROOT_DIR = process.cwd();
-const UPLOADS_PATH = resolve(PROJECT_ROOT_DIR, 'uploads');
-
 app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static(UPLOADS_PATH));
 
 app.get('/', (req, res) => {
   res.json('An API built in express about finances');
@@ -37,6 +34,7 @@ app.get('/', (req, res) => {
 app.use('/users/', userRoutes);
 app.use('/tokens/', tokenRoutes);
 app.use('/spendings/', spendingRoutes);
+app.use('/invoices/', invoicesRoutes);
 app.use('/savings/', savingsRoutes);
 
 export default app;
