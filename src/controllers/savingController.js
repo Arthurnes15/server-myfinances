@@ -4,16 +4,14 @@ class SavingController {
   async store(req, res) {
     const sentSaving = new SavingModel(req.body);
 
-    const { id, name, price, investment, user } = sentSaving;
-
-    sentSaving.percentage = ((investment * 100) / price).toFixed(2);
+    const { id, name, price, investment, percentage, user } = sentSaving;
 
     const err = sentSaving.validateSync();
 
     try {
       await sentSaving.save();
 
-      return res.json({ id, name, price, investment, user });
+      return res.json({ id, name, price, investment, percentage, user });
     } catch {
       return res.status(400).json({
         errors: err.errors,
@@ -37,7 +35,9 @@ class SavingController {
 
   async update(req, res) {
     try {
+      const { investment, price } = req.body;
       const { id } = req.params;
+      let percentage = 0;
 
       if (!id) {
         return res.status(400).json({
@@ -45,9 +45,11 @@ class SavingController {
         });
       }
 
-      const sentSaving = await SavingModel.findById(id);
+      const oldSaving = await SavingModel.findById(id);
+      percentage = ((investment * 100) / price).toFixed(2);
+      await oldSaving.updateOne({ percentage });
 
-      const updatedSaving = await sentSaving.updateOne(req.body);
+      const updatedSaving = await oldSaving.updateOne(req.body);
 
       return res.json(updatedSaving);
     } catch (err) {
@@ -72,7 +74,7 @@ class SavingController {
       await saving.deleteOne();
 
       return res.json({
-        apagado: true,
+        deleted: true,
       });
     } catch {
       return res.json(null);

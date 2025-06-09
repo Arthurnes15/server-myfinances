@@ -10,4 +10,10 @@ const SavingSchema = new mongoose.Schema({
   createdOn: { type: Date, default: Date.now() },
 });
 
+SavingSchema.pre('save', function (next) {
+  this.percentage = ((this.investment * 100) / this.price).toFixed(2);
+
+  next();
+});
+
 export default mongoose.model('Saving', SavingSchema);
