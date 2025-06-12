@@ -83,7 +83,7 @@ class InvoiceController {
     }
 
     const oldInvoice = await InvoiceModel.findById(id);
-    const { months } = oldInvoice;
+    const { months, total, installmentsValue } = oldInvoice;
 
     const deletedMonth = months.splice(index, 1);
 
@@ -97,6 +97,12 @@ class InvoiceController {
     months.forEach((month) => {
       if (month.checked === true) allCheckedMonths.push(month);
     });
+
+    const toPay = (total - allCheckedMonths.length * installmentsValue).toFixed(
+      1
+    );
+
+    await oldInvoice.updateOne({ restToPay: toPay });
 
     if (allCheckedMonths.length === months.length) {
       await oldInvoice.updateOne({ status: 'Paga' });

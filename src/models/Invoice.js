@@ -17,6 +17,7 @@ const InvoiceSchema = new mongoose.Schema({
   },
   user: { type: String, required: [true, 'Campo obrigatório'] },
   installmentsValue: Number,
+  restToPay: Number,
   months: Array,
 });
 
@@ -27,8 +28,8 @@ InvoiceSchema.pre('save', function (next) {
   );
 
   this.months.push(...installmentsMonths);
-
   this.installmentsValue = (this.total / this.installmentsNumber).toFixed(2);
+  this.restToPay = this.total;
 
   next();
 });
