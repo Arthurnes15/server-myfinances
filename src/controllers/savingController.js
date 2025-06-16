@@ -4,17 +4,17 @@ class SavingController {
   async store(req, res) {
     const sentSaving = new SavingModel(req.body);
 
-    const { id, name, price, investment, percentage, user } = sentSaving;
+    const { id, name, price, investment, percentage, image, user } = sentSaving;
 
     const err = sentSaving.validateSync();
 
     try {
       await sentSaving.save();
 
-      return res.json({ id, name, price, investment, percentage, user });
+      return res.json({ id, name, price, investment, percentage, image, user });
     } catch {
       return res.status(400).json({
-        errors: err.errors,
+        errors: err,
       });
     }
   }

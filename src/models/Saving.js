@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import CloudinaryStorage from './Storage.js';
 
 const SavingSchema = new mongoose.Schema({
   name: { type: String, required: [true, 'Campo obrigatório'] },
@@ -6,12 +7,16 @@ const SavingSchema = new mongoose.Schema({
   investment: { type: Number, required: [true, 'Campo obrigatório'] },
   percentage: { type: Number, default: 0 },
   user: { type: String, required: [true, 'Campo obrigatório'] },
-  image: { type: String },
+  image: String,
   createdOn: { type: Date, default: Date.now() },
 });
 
-SavingSchema.pre('save', function (next) {
+SavingSchema.pre('save', async function (next) {
   this.percentage = ((this.investment * 100) / this.price).toFixed(2);
+
+  const uploadedImage = await CloudinaryStorage.uploadImage(this.image);
+
+  this.image = uploadedImage.secure_url;
 
   next();
 });
