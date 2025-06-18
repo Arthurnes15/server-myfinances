@@ -16,7 +16,7 @@ SavingSchema.pre('save', async function (next) {
 
   const uploadedImage = await CloudinaryStorage.uploadImage(this.image);
 
-  this.image = uploadedImage.secure_url;
+  this.image = uploadedImage ? uploadedImage.secure_url : null;
 
   next();
 });
