@@ -17,7 +17,6 @@ class Storage {
         .upload(image, {
           overwrite: true,
           resource_type: 'image',
-          // TODO: Public ID
         })
         .catch((error) => {
           console.log(error);
@@ -25,7 +24,15 @@ class Storage {
 
       return uploadResult;
     } catch (error) {
-      console.log('Error uploading file: ', error);
+      console.log('Error uploading image: ', error);
+    }
+  }
+
+  async deleteImage(image) {
+    try {
+      await cloudinary.uploader.destroy(image).catch((err) => console.log(err));
+    } catch (error) {
+      console.log('Error deleting image: ', error);
     }
   }
 }

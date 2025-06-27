@@ -1,5 +1,5 @@
 import SavingModel from '../models/Saving.js';
-
+import CloudinaryStorage from '../models/Storage.js';
 class SavingController {
   async store(req, res) {
     const sentSaving = new SavingModel(req.body);
@@ -11,7 +11,9 @@ class SavingController {
     try {
       await sentSaving.save();
 
-      return res.json({ id, name, price, investment, percentage, image, user });
+      return res
+        .status(200)
+        .json({ id, name, price, investment, percentage, image, user });
     } catch {
       return res.status(400).json({
         errors: err,
@@ -35,7 +37,7 @@ class SavingController {
 
   async update(req, res) {
     try {
-      const { investment, price } = req.body;
+      const { name, investment, price, image } = req.body;
       const { id } = req.params;
       let percentage = 0;
 
@@ -49,9 +51,32 @@ class SavingController {
       percentage = ((investment * 100) / price).toFixed(2);
       await oldSaving.updateOne({ percentage });
 
-      const updatedSaving = await oldSaving.updateOne(req.body);
+      const oldImage = oldSaving.image;
 
-      return res.json(updatedSaving);
+      const isImageBase64 = image.split(':')[0] === 'data';
+
+      if (isImageBase64) {
+        if (oldImage !== null) {
+          const imageArray = oldImage.split('/');
+          const imageFile = imageArray[imageArray.length - 1];
+          const imageName = imageFile.split('.')[0];
+          await CloudinaryStorage.deleteImage(imageName).catch((err) =>
+            console.log('Error deleting file', err)
+          );
+        }
+        const uploadedImage = await CloudinaryStorage.uploadImage(image);
+        await oldSaving
+          .updateOne({ image: uploadedImage.secure_url })
+          .catch((err) => console.log('Error uploading file', err));
+      }
+
+      const updatedSaving = await oldSaving.updateOne({
+        name,
+        price,
+        investment,
+      });
+
+      return res.status(200).json(updatedSaving);
     } catch (err) {
       return res.status(400).json({
         errors: err,
@@ -70,6 +95,17 @@ class SavingController {
       }
 
       const saving = await SavingModel.findById(id);
+
+      const { image } = saving;
+
+      if (image !== null) {
+        const imageArray = image.split('/');
+        const imageFile = imageArray[imageArray.length - 1];
+        const imageName = imageFile.split('.')[0];
+        await CloudinaryStorage.deleteImage(imageName).catch((err) =>
+          console.log(err)
+        );
+      }
 
       await saving.deleteOne();
 
