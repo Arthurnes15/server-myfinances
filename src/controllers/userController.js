@@ -1,20 +1,42 @@
-import User from '../models/User.js';
-import { UserModel } from '../models/User.js';
+import UserModel from '../models/User.js';
+import validator from 'validator';
 
 import bcrypt from 'bcrypt';
 class UserController {
   async store(req, res) {
+    const sentUser = new UserModel(req.body);
+    const err = sentUser.validateSync();
+
     try {
-      const sentUser = new User(req.body);
-      await sentUser.register();
+      const { id, username, email } = sentUser;
 
-      const { user } = sentUser;
-      const { id, username, email } = user;
+      if (!validator.isEmail(email)) {
+        return res.status(400).json({
+          errors: ['Email inválido'],
+        });
+      }
 
-      return res.json({ id, username, email });
-    } catch (e) {
+      const existentUser = await UserModel.findOne({ email });
+
+      if (username === existentUser?.username) {
+        return res.status(400).json({
+          errors: ['Este nome de usuário já está em uso'],
+        });
+      }
+
+      if (email === existentUser?.email) {
+        return res.status(400).json({
+          errors: ['Este e-mail já está em uso'],
+        });
+      }
+
+      await sentUser.save();
+
+      return res.status(200).json({ id, username, email });
+    } catch (error) {
+      console.log(error);
       return res.status(400).json({
-        errors: [e.message],
+        errors: [err.errors],
       });
     }
   }

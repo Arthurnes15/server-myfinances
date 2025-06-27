@@ -1,71 +1,25 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
-import validator from 'validator';
-// TODO: Mudar a estrutura completa desse model
+
 const UserSchema = new mongoose.Schema({
-  username: { type: String, required: true },
-  email: { type: String, required: true },
-  password: { type: String, required: true },
+  username: {
+    type: String,
+    required: [true, 'O nome de usuário é um campo obrigatório'],
+  },
+  email: { type: String, required: [true, 'Email é um campo obrigatório'] },
+  password: {
+    type: String,
+    required: [true, 'A senha é um campo obrigatório'],
+    minLength: [6, 'A senha deve conter no mínimo 6 caracteres'],
+    maxLength: [50, 'A senha deve conter no máximo 50 caracteres'],
+  },
 });
 
-export const UserModel = mongoose.model('User', UserSchema);
+UserSchema.pre('save', function (next) {
+  const salt = bcrypt.genSaltSync();
+  this.password = bcrypt.hashSync(this.password, salt);
 
-class User {
-  constructor(body) {
-    this.body = body;
-    this.user = null;
-  }
+  next();
+});
 
-  async register() {
-    this.validate();
-
-    await this.userExists();
-
-    const salt = bcrypt.genSaltSync();
-    this.body.password = bcrypt.hashSync(this.body.password, salt);
-
-    this.user = await UserModel.create(this.body);
-  }
-
-  async userExists() {
-    this.user = await UserModel.findOne({ email: this.body.email });
-    if (this.user) throw new Error('Usuário já existe');
-  }
-
-  async findUser(email) {
-    const user = await UserModel.findOne({ email: email });
-    return user;
-  }
-
-  async passwordIsValid(password) {
-    this.validate();
-    this.user = await UserModel.findOne({ email: this.body.email });
-    return bcrypt.compare(password, this.user.password);
-  }
-
-  validate() {
-    if (!validator.isEmail(this.body.email)) {
-      throw new Error('E-mail inválido');
-    }
-
-    if (this.body.password.length < 6 || this.body.password.length > 50) {
-      throw new Error('A senha precisa ter entre 6 e 50 caracteres');
-    }
-  }
-
-  cleanUp() {
-    for (const key in this.body) {
-      if (typeof this.body[key] !== 'string') {
-        this.body[key] = '';
-      }
-    }
-
-    this.body = {
-      username: this.body.username,
-      email: this.body.email,
-      password: this.body.password,
-    };
-  }
-}
-
-export default User;
+export default mongoose.model('User', UserSchema);
