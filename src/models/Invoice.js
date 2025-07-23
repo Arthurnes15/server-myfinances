@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { getInstallmentsMonths } from '../lib/getInstallmentsMonths.js';
+import { getInstallmentsMonths } from '../utils/getInstallmentsMonths.js';
 
 const InvoiceSchema = new mongoose.Schema({
   item: { type: String, required: [true, 'Campo obrigatório'] },
