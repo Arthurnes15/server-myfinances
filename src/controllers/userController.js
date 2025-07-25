@@ -54,12 +54,37 @@ class UserController {
         throw new Error('A senha deve conter 50 caracteres no máximo');
       }
 
-      const oldUser = await UserModel.findById(id);
+      const user = await UserModel.findById(id);
 
       const salt = bcrypt.genSaltSync();
       const hashedPassword = bcrypt.hashSync(password, salt);
 
-      await oldUser.updateOne({ password: hashedPassword });
+      await user.updateOne({ password: hashedPassword });
+
+      return res.json({ message: 'Senha alterada com sucesso' });
+    } catch (err) {
+      return res.status(400).json({
+        errors: [err.message],
+      });
+    }
+  }
+
+  async updateForgottenPassword(req, res) {
+    try {
+      const { email, newPassword } = req.body;
+
+      const user = await UserModel.findOne({ email });
+
+      if (!user) {
+        return res.status(400).json({
+          errors: ['Este usuário não existe'],
+        });
+      }
+
+      const salt = bcrypt.genSaltSync();
+      const hashedPassword = bcrypt.hashSync(newPassword, salt);
+
+      await user.updateOne({ password: hashedPassword });
 
       return res.json({ message: 'Senha alterada com sucesso' });
     } catch (err) {
